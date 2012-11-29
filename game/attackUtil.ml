@@ -100,8 +100,7 @@ let attackHappens (g:state) (c:color) (m:string) (attack:attk) : bool =
 	     let new_hp = !hp - damage in
 	     if new_hp<=0 then raise (Fainted (c,m)) (*check faint*)
 	     else (
-		   Netgraphics.add_update (Message("Negative: "^(color_to_string c)^" "^(string_of_int damage)));
-		  (*Netgraphics.add_update (NegativeEffect("", c, damage)); *)
+		   Netgraphics.add_update (NegativeEffect(" ", c, damage));
 	       let u = (m, new_hp, get_max_hp g m, c) in
 	       Netgraphics.add_update (UpdateSteammon(u));
 	       hp := new_hp; (*change hp*)
@@ -149,6 +148,8 @@ let calcWeakness (g:state) (oppM:string) (attack:attk) : float =
     (Netgraphics.add_update (Message("It's not very effective...")))
   else if eff>1. then
     (Netgraphics.add_update (Message("It's super effective!")))
+  else if eff=0. then
+    (Netgraphics.add_update (Message("It doesn't effect "^oppM^"!")))
   else ());
   eff
 

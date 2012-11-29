@@ -155,7 +155,7 @@ let handleItem (g:state) (c:color) (i:item) (s:string) =
 	   Netgraphics.add_update (Message((color_to_string c)^" used XAccuracy on "^(get_starter g c)^"!"));
 	   changeMod g (get_starter g c) Ac 1 )
 
-let handleAttack g c s =
+let handleAttack (g:state) (c:color) (s:string) =
   if not(validAttack g c s) then
     (Netgraphics.add_update (Message((color_to_string c)^" tried to use an illegal attack...")))
   else (
@@ -178,8 +178,7 @@ let handleAttack g c s =
 	    let new_hp = !hp - damage in
 	    if new_hp<=0 then raise (Fainted ((invert_color c),oppM)) (*check faint*)
 	    else (
-		  Netgraphics.add_update (Message("Negative: "^(color_to_string(invert_color c))^" "^(string_of_int damage)));
-	      (*Netgraphics.add_update (NegativeEffect("", invert_color c, damage));*)
+	      Netgraphics.add_update (NegativeEffect(s, invert_color c, damage));
 	      let u = (oppM, new_hp, get_max_hp g oppM, invert_color c) in
 	      Netgraphics.add_update (UpdateSteammon(u));
 	      hp := new_hp; (*change hp*)
@@ -218,8 +217,7 @@ let turnEndStuff (g:state) =
 		                  defense_mod=0; accuracy_mod=0};
           if (num_left g c) <= 0 then raise (GameOver(invert_color c)) else ()))
 	  else (
-	    Netgraphics.add_update (Message("Negative: "^(color_to_string(invert_color c))^(string_of_int damage)));
-        (*Netgraphics.add_update (NegativeEffect("", c, damage)); *)
+        Netgraphics.add_update (NegativeEffect(" ", c, damage));
 	    let u = (m, new_hp, get_max_hp g m, c) in
 	    Netgraphics.add_update (UpdateSteammon(u));	  
 	    hp := new_hp) in (*change hp*)
